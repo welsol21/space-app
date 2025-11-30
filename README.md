@@ -1,10 +1,10 @@
 # Space App - Planetary System API
 
-Spring Boot 3.5.8 RESTful + GraphQL API для управления информацией о планетах и их лунах с ролевой системой доступа.
+Spring Boot 3.5.8 RESTful + GraphQL API for managing information about planets and their moons with role-based access control.
 
-## 📋 Функциональность
+## 📋 Functionality
 
-### ✅ Полностью реализовано
+### ✅ Fully Implemented
 
 #### **Entities**
 - `Planet` (planet_id, name, type, radius_km, mass_kg, orbital_period_days)
@@ -14,48 +14,48 @@ Spring Boot 3.5.8 RESTful + GraphQL API для управления информ
 #### **REST API Endpoints**
 
 **Planets:**
-- `POST /api/planets` - создать планету
-- `GET /api/planets` - список всех планет
-- `GET /api/planets/{id}` - планета по ID
-- `PUT /api/planets/{id}` - обновить планету
-- `DELETE /api/planets/{id}` - удалить планету
-- `GET /api/planets/search/by-type?type=...` - поиск по типу
-- `GET /api/planets/names` - получить только имена планет
+- `POST /api/planets` - create a planet
+- `GET /api/planets` - list all planets
+- `GET /api/planets/{id}` - get planet by ID
+- `PUT /api/planets/{id}` - update planet
+- `DELETE /api/planets/{id}` - delete planet
+- `GET /api/planets/search/by-type?type=...` - search by type
+- `GET /api/planets/names` - get planet names only
 
 **Moons:**
-- `POST /api/moons` - создать луну (с проверкой существования планеты)
-- `GET /api/moons` - список всех лун
-- `GET /api/moons/{id}` - луна по ID
-- `DELETE /api/moons/{id}` - удалить луну
-- `GET /api/moons/by-planet-name/{planetName}` - луны по имени планеты
-- `GET /api/moons/count/by-planet/{planetId}` - количество лун у планеты
+- `POST /api/moons` - create a moon (with planet existence validation)
+- `GET /api/moons` - list all moons
+- `GET /api/moons/{id}` - get moon by ID
+- `DELETE /api/moons/{id}` - delete moon
+- `GET /api/moons/by-planet-name/{planetName}` - list moons by planet name
+- `GET /api/moons/count/by-planet/{planetId}` - count moons for a planet
 
 #### **GraphQL Endpoints**
 - **Query:** `userById(id: ID!): User`
 - **Mutation:** `createUser(input: CreateUserInput!): User`
 
 #### **Security (Spring Security Basic Auth)**
-- **ADMIN:** полный доступ + управление пользователями (GraphQL)
-- **STAFF:** CRUD операции для планет и лун
-- **STUDENT:** только чтение планет и лун
-- Пароли хешируются через BCrypt
-- URL-based security + `@PreAuthorize` для fine-grained control
+- **ADMIN:** full access + user management (GraphQL)
+- **STAFF:** CRUD operations for planets and moons
+- **STUDENT:** read-only access to planets and moons
+- Passwords hashed via BCrypt
+- URL-based security + `@PreAuthorize` for fine-grained control
 
 #### **AOP Logging (AspectJ)**
-Реализовано 3 pointcut:
-1. **Controller layer** - логирование входа/выхода методов
-2. **Service layer** - измерение времени выполнения
-3. **Exception handling** - логирование исключений
+3 pointcuts implemented:
+1. **Controller layer** - entry/exit logging
+2. **Service layer** - execution time measurement
+3. **Exception handling** - exception logging
 
 #### **Best Practices**
-- Разделение слоёв: Controllers → Services → Repositories
-- DTOs для API (не entities напрямую)
-- Валидация через Jakarta (`@NotNull`, `@Size`, `@Valid`)
-- Централизованная обработка исключений (`@ControllerAdvice`)
+- Layer separation: Controllers → Services → Repositories
+- DTOs for API (not entities directly)
+- Jakarta validation (`@NotNull`, `@Size`, `@Valid`)
+- Centralized exception handling (`@ControllerAdvice`)
 - Custom JPA queries (`@Query`)
-- Использование `@ResponseStatus` вместо `ResponseEntity<>`
+- Using `@ResponseStatus` instead of `ResponseEntity<>`
 
-#### **Дополнительные возможности**
+#### **Additional Features**
 - Swagger UI: http://localhost:8080/swagger-ui.html
 - H2 Console: http://localhost:8080/h2-console
 - GraphiQL: http://localhost:8080/graphiql
@@ -63,35 +63,35 @@ Spring Boot 3.5.8 RESTful + GraphQL API для управления информ
 
 ---
 
-## 🚀 Как запустить
+## 🚀 How to Run
 
-### Требования
+### Requirements
 - Java 17+
 - Maven 3.6+
 
-### Шаги
+### Steps
 
-1. **Клонировать репозиторий**
+1. **Clone repository**
 ```bash
 git clone <repo-url>
 cd space-app
 ```
 
-2. **Сборка проекта**
+2. **Build project**
 ```bash
 mvn clean install
 ```
 
-3. **Запуск приложения**
+3. **Run application**
 ```bash
 mvn spring-boot:run
 ```
 
-Приложение будет доступно на: http://localhost:8080
+Application will be available at: http://localhost:8080
 
 ---
 
-## 🔑 Предзагруженные пользователи
+## 🔑 Preloaded Users
 
 | Username | Password | Role    |
 |----------|----------|---------|
@@ -104,12 +104,12 @@ mvn spring-boot:run
 ## 📚 API Documentation
 
 ### Swagger UI
-Открой в браузере: http://localhost:8080/swagger-ui.html
+Open in browser: http://localhost:8080/swagger-ui.html
 
 ### GraphiQL
-Открой в браузере: http://localhost:8080/graphiql
+Open in browser: http://localhost:8080/graphiql
 
-**Пример GraphQL Query:**
+**GraphQL Query Example:**
 ```graphql
 query {
   userById(id: 1) {
@@ -120,7 +120,7 @@ query {
 }
 ```
 
-**Пример GraphQL Mutation:**
+**GraphQL Mutation Example:**
 ```graphql
 mutation {
   createUser(input: {
@@ -137,20 +137,20 @@ mutation {
 
 ---
 
-## 🧪 Тестирование
+## 🧪 Testing
 
-### Запустить все тесты
+### Run all tests
 ```bash
 mvn test
 ```
 
-### Запустить конкретный тест
+### Run specific test
 ```bash
 mvn test -Dtest=PlanetServiceTest
 ```
 
-### Отчёт о тестах
-После выполнения тестов отчёт генерируется в:
+### Test Report
+After running tests, report is generated at:
 - `target/test-report.md`
 - `test-report.md` (корень проекта)
 
@@ -175,7 +175,7 @@ mvn test -Dtest=PlanetServiceTest
 
 ---
 
-## 🛠️ Технологии
+## 🛠️ Technologies
 
 - **Spring Boot:** 3.5.8
 - **Java:** 17
@@ -191,15 +191,15 @@ mvn test -Dtest=PlanetServiceTest
 
 ---
 
-## ⚠️ Известные ограничения
+## ⚠️ Known Limitations
 
-Все функциональные требования реализованы. Никаких ограничений нет.
+All functional requirements are implemented. No limitations.
 
 ---
 
-## 📝 Примеры запросов (REST)
+## 📝 REST Request Examples
 
-### Создать планету (ADMIN/STAFF)
+### Create planet (ADMIN/STAFF)
 ```bash
 curl -X POST http://localhost:8080/api/planets \
   -u admin:admin123 \
@@ -213,13 +213,13 @@ curl -X POST http://localhost:8080/api/planets \
   }'
 ```
 
-### Получить все планеты (любая роль)
+### Get all planets (any role)
 ```bash
 curl -X GET http://localhost:8080/api/planets \
   -u student:stud123
 ```
 
-### Удалить планету (только ADMIN/STAFF)
+### Delete planet (ADMIN/STAFF only)
 ```bash
 curl -X DELETE http://localhost:8080/api/planets/1 \
   -u admin:admin123
@@ -227,12 +227,12 @@ curl -X DELETE http://localhost:8080/api/planets/1 \
 
 ---
 
-## 👥 Авторы
+## 👥 Authors
 
-[Ваше имя] - Manual Implementation
+[Your Name] - Manual Implementation
 
 ---
 
-## 📄 Лицензия
+## 📄 License
 
-Этот проект создан для учебных целей (MTU App Development Frameworks, 2025).
+This project was created for educational purposes (MTU App Development Frameworks, 2025).
