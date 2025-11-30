@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 @Controller
@@ -18,11 +19,13 @@ public class UserGraphqlController {
     }
 
     @QueryMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDto userById(@Argument Long id) {
         return userService.getUserById(id);
     }
 
     @MutationMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public UserDto createUser(@Argument("input") @Valid UserCreateDto input) {
         return userService.createUser(input);
     }

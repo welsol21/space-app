@@ -5,6 +5,7 @@ import com.example.spaceapp.dto.PlanetDto;
 import com.example.spaceapp.service.PlanetService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class PlanetController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public PlanetDto create(@Valid @RequestBody PlanetCreateUpdateDto dto) {
         return planetService.createPlanet(dto);
     }
@@ -41,6 +43,7 @@ public class PlanetController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('ADMIN', 'STAFF')")
     public void delete(@PathVariable Long id) {
         planetService.deletePlanet(id);
     }

@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin())) // for H2 console
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/h2-console/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**", "/h2-console/**", "/actuator/**").permitAll()
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/planets/**", "/api/moons/**").hasAnyRole("ADMIN", "STAFF", "STUDENT")
                         .requestMatchers(org.springframework.http.HttpMethod.POST, "/api/planets/**", "/api/moons/**").hasAnyRole("ADMIN", "STAFF")
                         .requestMatchers(org.springframework.http.HttpMethod.PUT, "/api/planets/**", "/api/moons/**").hasAnyRole("ADMIN", "STAFF")
