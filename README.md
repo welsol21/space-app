@@ -21,6 +21,7 @@ Spring Boot 3.5.8 RESTful + GraphQL API for managing information about planets a
 - `DELETE /api/planets/{id}` - delete planet
 - `GET /api/planets/search/by-type?type=...` - search by type
 - `GET /api/planets/names` - get planet names only
+- `GET /api/planets/fields/name-mass` - get only name and mass_kg
 
 **Moons:**
 - `POST /api/moons` - create a moon (with planet existence validation)
@@ -97,9 +98,14 @@ Application will be available at: http://localhost:8080
 |----------|----------|---------|
 | admin    | admin123 | ADMIN   |
 | staff    | staff123 | STAFF   |
-| student  | stud123  | STUDENT |
+| student  | student123 | STUDENT |
 
 ---
+
+## 🌱 Preloaded Sample Data
+
+- Planets: Earth (Terrestrial), Jupiter (Gas Giant)
+- Moons: Moon (Earth), Io (Jupiter), Europa (Jupiter)
 
 ## 📚 API Documentation
 
@@ -152,17 +158,17 @@ mvn test -Dtest=PlanetServiceTest
 ### Test Report
 After running tests, report is generated at:
 - `target/test-report.md`
-- `test-report.md` (корень проекта)
+- `test-report.md` (project root)
 
 ---
 
-## 🗄️ База данных
+## 🗄️ Database
 
 ### H2 Console
 - URL: http://localhost:8080/h2-console
 - JDBC URL: `jdbc:h2:mem:spacedb`
 - Username: `sa`
-- Password: *(пусто)*
+- Password: (empty)
 
 ---
 
@@ -216,7 +222,7 @@ curl -X POST http://localhost:8080/api/planets \
 ### Get all planets (any role)
 ```bash
 curl -X GET http://localhost:8080/api/planets \
-  -u student:stud123
+  -u student:student123
 ```
 
 ### Delete planet (ADMIN/STAFF only)
