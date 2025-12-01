@@ -73,6 +73,13 @@ public class PlanetService {
         return planetRepository.findAllNames();
     }
 
+    @Transactional(readOnly = true)
+    public List<com.example.spaceapp.dto.PlanetNameMassDto> getNameAndMass() {
+        return planetRepository.findAll().stream()
+                .map(p -> new com.example.spaceapp.dto.PlanetNameMassDto(p.getName(), p.getMassKg()))
+                .collect(java.util.stream.Collectors.toList());
+    }
+
     private PlanetDto toDto(Planet planet) {
         return PlanetDto.builder()
                 .id(planet.getId())

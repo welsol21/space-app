@@ -57,4 +57,9 @@ public class PlanetController {
     public List<String> getNames() {
         return planetService.getAllNames();
     }
+
+    @GetMapping("/fields/name-mass")
+    public List<com.example.spaceapp.dto.PlanetNameMassDto> getNameAndMass() {
+        return planetService.getNameAndMass();
+    }
 }

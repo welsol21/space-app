@@ -5,6 +5,7 @@ import com.example.spaceapp.dto.MoonDto;
 import com.example.spaceapp.service.MoonService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,17 +31,20 @@ public class MoonController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public MoonDto create(@Valid @RequestBody MoonCreateUpdateDto dto) {
         return moonService.createMoon(dto);
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public MoonDto update(@PathVariable Long id, @Valid @RequestBody MoonCreateUpdateDto dto) {
         return moonService.updateMoon(id, dto);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public void delete(@PathVariable Long id) {
         moonService.deleteMoon(id);
     }
