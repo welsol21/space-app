@@ -199,4 +199,12 @@ class PlanetControllerIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[?(@ == 'Mercury')]").exists());
     }
+
+    @Test
+    void nameAndMassEndpoint_shouldReturnExpectedFields() throws Exception {
+        mockMvc.perform(get("/api/planets/fields/name-mass")
+                        .header(HttpHeaders.AUTHORIZATION, basic(TestUsers.ADMIN_USER, TestUsers.ADMIN_PASS)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[?(@.name == 'Mercury' && @.massKg == 3.301E23)]").exists());
+    }
 }
