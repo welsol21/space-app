@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
+/** Business logic for users, validation, and DTO mapping */
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;

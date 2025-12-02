@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+/** Business logic for planets, validation, and DTO mapping */
 public class PlanetService {
     private final PlanetRepository planetRepository;
 

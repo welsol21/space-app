@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+/** Business logic for moons, validation, and DTO mapping */
 public class MoonService {
     private final MoonRepository moonRepository;
     private final PlanetRepository planetRepository;

@@ -13,6 +13,9 @@ import com.example.spaceapp.model.Planet;
 import com.example.spaceapp.model.Moon;
 
 @Component
+/**
+ * Seeds default users and sample planets/moons on startup if repositories are empty.
+ */
 public class DataInitializer implements ApplicationRunner {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -26,6 +29,7 @@ public class DataInitializer implements ApplicationRunner {
         this.moonRepository = moonRepository;
     }
 
+    /** Boot-time preload of users and sample celestial data */
     @Override
     public void run(ApplicationArguments args) {
         if (userRepository.count() == 0) {

@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/moons")
+/** REST controller for moon endpoints. Read allowed to ADMIN/STAFF/STUDENT; write restricted to ADMIN/STAFF. */
 public class MoonController {
     private final MoonService moonService;
 
@@ -19,16 +20,19 @@ public class MoonController {
         this.moonService = moonService;
     }
 
+    /** List all moons */
     @GetMapping
     public List<MoonDto> getAll() {
         return moonService.getAllMoons();
     }
 
+    /** Get a moon by id */
     @GetMapping("/{id}")
     public MoonDto getById(@PathVariable Long id) {
         return moonService.getMoonById(id);
     }
 
+    /** Create moon (ADMIN/STAFF) */
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
@@ -36,12 +40,14 @@ public class MoonController {
         return moonService.createMoon(dto);
     }
 
+    /** Update moon (ADMIN/STAFF) */
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
     public MoonDto update(@PathVariable Long id, @Valid @RequestBody MoonCreateUpdateDto dto) {
         return moonService.updateMoon(id, dto);
     }
 
+    /** Delete moon (ADMIN/STAFF) */
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAnyRole('ADMIN','STAFF')")
@@ -49,11 +55,13 @@ public class MoonController {
         moonService.deleteMoon(id);
     }
 
+    /** List moons by planet name */
     @GetMapping("/by-planet-name/{planetName}")
     public List<MoonDto> listByPlanetName(@PathVariable String planetName) {
         return moonService.listByPlanetName(planetName);
     }
 
+    /** Count moons by planet id */
     @GetMapping("/count/by-planet/{planetId}")
     public long countByPlanet(@PathVariable Long planetId) {
         return moonService.countByPlanetId(planetId);

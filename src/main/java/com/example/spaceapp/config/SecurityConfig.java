@@ -14,8 +14,16 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableMethodSecurity
+/**
+ * Configures HTTP Basic security, public endpoints for docs/H2/actuator,
+ * role-based access for REST, and admin-only GraphQL. Enables method security.
+ */
 public class SecurityConfig {
 
+    /**
+     * HTTP security rules: permit docs/h2/actuator; REST read for ADMIN/STAFF/STUDENT,
+     * REST write for ADMIN/STAFF; GraphQL restricted to ADMIN.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
