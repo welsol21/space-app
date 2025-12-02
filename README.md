@@ -1,244 +1,328 @@
-# Space App - Planetary System API
+# Space Exploration API - Manual Implementation
 
-Spring Boot 3.5.8 RESTful + GraphQL API for managing information about planets and their moons with role-based access control.
+## Project Overview
 
-## 📋 Functionality
+This is a Spring Boot 3.5.8 REST and GraphQL API for managing planets, moons, and users with role-based security. The project was developed manually by our team as part of an assignment to compare human-written code with AI-generated implementations.
 
-### ✅ Fully Implemented
+## Technologies Used
 
-#### **Entities**
-- `Planet` (planet_id, name, type, radius_km, mass_kg, orbital_period_days)
-- `Moon` (moon_id, name, diameter_km, orbital_period_days, planet_id)
-- `User` (user_id, username, password, role: ADMIN/STAFF/STUDENT)
+- **Java 17**
+- **Spring Boot 3.5.8**
+- **Spring Data JPA** (Hibernate)
+- **H2 Database** (in-memory)
+- **Spring Security** (Basic Authentication)
+- **Spring Boot GraphQL**
+- **Maven** (build tool)
+- **Lombok** (boilerplate reduction)
+- **Swagger/OpenAPI** (API documentation)
+- **AspectJ** (AOP logging)
 
-#### **REST API Endpoints**
+## Features
 
-**Planets:**
-- `POST /api/planets` - create a planet
-- `GET /api/planets` - list all planets
-- `GET /api/planets/{id}` - get planet by ID
-- `PUT /api/planets/{id}` - update planet
-- `DELETE /api/planets/{id}` - delete planet
-- `GET /api/planets/search/by-type?type=...` - search by type
-- `GET /api/planets/names` - get planet names only
-- `GET /api/planets/fields/name-mass` - get only name and mass_kg
+### Entities
 
-**Moons:**
-- `POST /api/moons` - create a moon (with planet existence validation)
-- `GET /api/moons` - list all moons
-- `GET /api/moons/{id}` - get moon by ID
-- `DELETE /api/moons/{id}` - delete moon
-- `GET /api/moons/by-planet-name/{planetName}` - list moons by planet name
-- `GET /api/moons/count/by-planet/{planetId}` - count moons for a planet
+1. **Planet**
+   - Fields: id, name, type, radiusKm, massKg, orbitalPeriodDays
+   - One-to-many relationship with Moon
 
-#### **GraphQL Endpoints**
-- **Query:** `userById(id: ID!): User`
-- **Mutation:** `createUser(input: CreateUserInput!): User`
+2. **Moon**
+   - Fields: id, name, diameterKm, orbitalPeriodDays, planetId (FK)
+   - Many-to-one relationship with Planet
 
-#### **Security (Spring Security Basic Auth)**
-- **ADMIN:** full access + user management (GraphQL)
-- **STAFF:** CRUD operations for planets and moons
-- **STUDENT:** read-only access to planets and moons
-- Passwords hashed via BCrypt
-- URL-based security + `@PreAuthorize` for fine-grained control
+3. **User**
+   - Fields: id, username, password (BCrypt hashed), role (ADMIN/STAFF/STUDENT)
+   - Used for authentication and authorization
 
-#### **AOP Logging (AspectJ)**
-3 pointcuts implemented:
-1. **Controller layer** - entry/exit logging
-2. **Service layer** - execution time measurement
-3. **Exception handling** - exception logging
+### REST API Endpoints
 
-#### **Best Practices**
-- Layer separation: Controllers → Services → Repositories
-- DTOs for API (not entities directly)
-- Jakarta validation (`@NotNull`, `@Size`, `@Valid`)
-- Centralized exception handling (`@ControllerAdvice`)
-- Custom JPA queries (`@Query`)
-- Using `@ResponseStatus` instead of `ResponseEntity<>`
+**Planets** (`/api/planets`)
+- `GET /api/planets` - List all planets
+- `GET /api/planets/{id}` - Get planet by ID
+- `POST /api/planets` - Create new planet (ADMIN/STAFF only)
+- `PUT /api/planets/{id}` - Update planet (ADMIN/STAFF only)
+- `DELETE /api/planets/{id}` - Delete planet (ADMIN/STAFF only)
+- `GET /api/planets/search/by-type?type={type}` - Search by type
+- `GET /api/planets/names` - Get all planet names
+- `GET /api/planets/fields/name-mass` - Get name and mass only
 
-#### **Additional Features**
-- Swagger UI: http://localhost:8080/swagger-ui.html
-- H2 Console: http://localhost:8080/h2-console
-- GraphiQL: http://localhost:8080/graphiql
-- Actuator: http://localhost:8080/actuator/mappings
+**Moons** (`/api/moons`)
+- `GET /api/moons` - List all moons
+- `GET /api/moons/{id}` - Get moon by ID
+- `POST /api/moons` - Create new moon (ADMIN/STAFF only)
+- `PUT /api/moons/{id}` - Update moon (ADMIN/STAFF only)
+- `DELETE /api/moons/{id}` - Delete moon (ADMIN/STAFF only)
+- `GET /api/moons/by-planet-name/{planetName}` - List moons by planet name
+- `GET /api/moons/count/by-planet/{planetId}` - Count moons for a planet
 
----
+### GraphQL API (`/graphql`)
 
-## 🚀 How to Run
+**Queries**
+- `userById(id: ID!)` - Find user by ID (ADMIN only)
 
-### Requirements
-- Java 17+
+**Mutations**
+- `createUser(username: String!, password: String!, role: String!)` - Create user (ADMIN only)
+
+### Security
+
+- **Authentication**: HTTP Basic Authentication
+- **Authorization**: Role-based access control
+  - **ADMIN**: Full access to all endpoints including user management
+  - **STAFF**: Can create, update, delete planets and moons
+  - **STUDENT**: Read-only access to planets and moons
+- **Password Hashing**: BCrypt with strength 10
+
+### Preloaded Test Users
+
+| Username | Password    | Role    |
+|----------|-------------|---------|
+| admin    | admin123    | ADMIN   |
+| staff    | staff123    | STAFF   |
+| student  | student123  | STUDENT |
+
+### Best Practices Implemented
+
+1. **Layered Architecture**: Controllers → Services → Repositories
+2. **DTOs**: Separate DTOs for input/output, not exposing entities directly
+3. **Validation**: Jakarta validation annotations (@NotNull, @Size, @Positive)
+4. **Centralized Exception Handling**: @RestControllerAdvice with structured error responses
+5. **AOP Logging**: AspectJ with 3 pointcuts:
+   - Controller entry/exit logging (@Before/@AfterReturning)
+   - Service method execution timing (@Around)
+   - Exception logging (@AfterThrowing)
+6. **Security**: Method-level security with @PreAuthorize and URL-based configuration
+7. **API Documentation**: Swagger/OpenAPI accessible at `/swagger-ui.html`
+
+## How to Run
+
+### Prerequisites
+- Java 17 or higher
 - Maven 3.6+
 
-### Steps
+### Build and Run
 
-1. **Clone repository**
 ```bash
-git clone <repo-url>
+# Clone the repository
+git clone https://github.com/welsol21/space-app.git
 cd space-app
-```
 
-2. **Build project**
-```bash
+# Build the project
 mvn clean install
-```
 
-3. **Run application**
-```bash
+# Run the application
 mvn spring-boot:run
 ```
 
-Application will be available at: http://localhost:8080
+The application will start on `http://localhost:8080`
 
----
+### Access Points
 
-## 🔑 Preloaded Users
+- **Swagger UI**: http://localhost:8080/swagger-ui.html
+- **H2 Console**: http://localhost:8080/h2-console
+  - JDBC URL: `jdbc:h2:mem:testdb`
+  - Username: `sa`
+  - Password: (leave blank)
+- **GraphQL**: http://localhost:8080/graphql
+- **Actuator**: http://localhost:8080/actuator
 
-| Username | Password | Role    |
-|----------|----------|---------|
-| admin    | admin123 | ADMIN   |
-| staff    | staff123 | STAFF   |
-| student  | student123 | STUDENT |
+### Testing with Swagger
 
----
+1. Navigate to http://localhost:8080/swagger-ui.html
+2. Click "Authorize" button
+3. Enter credentials (e.g., `admin` / `admin123`)
+4. Try various endpoints
 
-## 🌱 Preloaded Sample Data
+## AI-Generated Implementations
 
-- Planets: Earth (Terrestrial), Jupiter (Gas Giant)
-- Moons: Moon (Earth), Io (Jupiter), Europa (Jupiter)
+This repository also includes two AI-generated versions of the same project for comparison:
 
-## 📚 API Documentation
+### 1. GPT-Generated Project (`gpt5.1_space-app/`)
+- Generated using ChatGPT
+- **Status**: Compiles and runs successfully
+- **Test Results**: 6/9 controller tests pass
+- **Missing Features**: 1 endpoint (`/api/planets/fields/name-mass`)
+- **Completeness**: ~90%
 
-### Swagger UI
-Open in browser: http://localhost:8080/swagger-ui.html
+### 2. Gemini-Generated Project (`Gemini3.1/universe-api/`)
+- Generated using Google Gemini AI Studio
+- **Status**: Compiles and runs successfully
+- **Test Results**: 6/7 controller tests pass
+- **Missing Features**: 2 endpoints (names, name+mass)
+- **Known Issues**: GraphQL query not restricted to ADMIN; moon update bug
+- **Completeness**: ~85%
 
-### GraphiQL
-Open in browser: http://localhost:8080/graphiql
+See `AI-CRITICAL-ANALYSIS.md` for a detailed comparison of all three implementations.
 
-**GraphQL Query Example:**
-```graphql
-query {
-  userById(id: 1) {
-    id
-    username
-    role
-  }
-}
+## Project Structure
+
+```
+space-app/
+├── src/                                    # Manual implementation 
+│   ├── main/
+│   │   ├── java/com/example/spaceapp/
+│   │   │   ├── SpaceAppApplication.java
+│   │   │   ├── aspect/
+│   │   │   │   └── LoggingAspect.java
+│   │   │   ├── config/
+│   │   │   │   ├── DataInitializer.java
+│   │   │   │   └── SecurityConfig.java
+│   │   │   ├── controller/
+│   │   │   │   ├── MoonController.java
+│   │   │   │   ├── PlanetController.java
+│   │   │   │   └── UserGraphqlController.java
+│   │   │   ├── dto/
+│   │   │   ├── exception/
+│   │   │   │   ├── BadRequestException.java
+│   │   │   │   ├── GlobalExceptionHandler.java
+│   │   │   │   └── ResourceNotFoundException.java
+│   │   │   ├── model/
+│   │   │   │   ├── Moon.java
+│   │   │   │   ├── Planet.java
+│   │   │   │   ├── User.java
+│   │   │   │   └── UserRole.java
+│   │   │   ├── repository/
+│   │   │   │   ├── MoonRepository.java
+│   │   │   │   ├── PlanetRepository.java
+│   │   │   │   └── UserRepository.java
+│   │   │   ├── security/
+│   │   │   │   └── UserPrincipal.java
+│   │   │   └── service/
+│   │   │       ├── MoonService.java
+│   │   │       ├── PlanetService.java
+│   │   │       └── UserService.java
+│   │   └── resources/
+│   │       ├── application.properties
+│   │       └── graphql/
+│   │           └── user.graphqls
+│   └── test/
+│       └── java/com/example/spaceapp/
+│           ├── controller/
+│           │   ├── MoonControllerIntegrationTest.java
+│           │   ├── PlanetControllerIntegrationTest.java
+│           │   └── UserGraphqlControllerIntegrationTest.java
+│           ├── repository/
+│           └── service/
+├── gpt5.1_space-app/                      # GPT-generated implementation
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/example/spaceapp/
+│   │   │   │   ├── SpaceAppApplication.java
+│   │   │   │   ├── aspect/
+│   │   │   │   │   └── LoggingAspect.java
+│   │   │   │   ├── config/
+│   │   │   │   │   ├── DataInitializer.java
+│   │   │   │   │   └── SecurityConfig.java
+│   │   │   │   ├── controller/
+│   │   │   │   │   ├── MoonController.java
+│   │   │   │   │   ├── PlanetController.java
+│   │   │   │   │   └── UserGraphqlController.java
+│   │   │   │   ├── dto/
+│   │   │   │   ├── exception/
+│   │   │   │   │   └── GlobalExceptionHandler.java
+│   │   │   │   ├── model/
+│   │   │   │   │   ├── Moon.java
+│   │   │   │   │   ├── Planet.java
+│   │   │   │   │   └── User.java
+│   │   │   │   ├── repository/
+│   │   │   │   │   ├── MoonRepository.java
+│   │   │   │   │   ├── PlanetRepository.java
+│   │   │   │   │   └── UserRepository.java
+│   │   │   │   └── service/
+│   │   │   │       ├── MoonService.java
+│   │   │   │       ├── PlanetService.java
+│   │   │   │       └── UserService.java
+│   │   │   └── resources/
+│   │   │       ├── application.properties
+│   │   │       └── graphql/
+│   │   │           └── user.graphqls
+│   │   └── test/
+│   │       └── java/com/example/spaceapp/controller/
+│   │           ├── MoonControllerIntegrationTest.java
+│   │           ├── PlanetControllerIntegrationTest.java
+│   │           ├── UserGraphqlControllerIntegrationTest.java
+│   │           └── testutil/
+│   │               ├── JsonUtil.java
+│   │               └── TestUsers.java
+│   └── pom.xml
+├── Gemini3.1/                             # Gemini-generated implementation
+│   └── universe-api/
+│       ├── src/
+│       │   ├── main/
+│       │   │   ├── java/com/example/universe/
+│       │   │   │   ├── UniverseApplication.java
+│       │   │   │   ├── aspect/
+│       │   │   │   │   └── LoggingAspect.java
+│       │   │   │   ├── config/
+│       │   │   │   │   ├── DataLoader.java
+│       │   │   │   │   ├── OpenApiConfig.java
+│       │   │   │   │   └── SecurityConfig.java
+│       │   │   │   ├── controller/
+│       │   │   │   │   ├── MoonController.java
+│       │   │   │   │   ├── PlanetController.java
+│       │   │   │   │   └── UserGraphqlController.java
+│       │   │   │   ├── dto/
+│       │   │   │   ├── exception/
+│       │   │   │   │   └── GlobalExceptionHandler.java
+│       │   │   │   ├── model/
+│       │   │   │   │   ├── Moon.java
+│       │   │   │   │   ├── Planet.java
+│       │   │   │   │   ├── User.java
+│       │   │   │   │   └── UserRole.java
+│       │   │   │   ├── repository/
+│       │   │   │   │   ├── MoonRepository.java
+│       │   │   │   │   ├── PlanetRepository.java
+│       │   │   │   │   └── UserRepository.java
+│       │   │   │   └── service/
+│       │   │   │       ├── MoonService.java
+│       │   │   │       ├── PlanetService.java
+│       │   │   │       └── UserService.java
+│       │   │   └── resources/
+│       │   │       ├── application.properties
+│       │   │       └── graphql/
+│       │   │           └── schema.graphqls
+│       │   └── test/
+│       │       └── java/com/example/universe/controller/
+│       │           ├── MoonControllerIntegrationTest.java
+│       │           ├── PlanetControllerIntegrationTest.java
+│       │           ├── UserGraphqlControllerIntegrationTest.java
+│       │           └── testutil/
+│       │               ├── JsonUtil.java
+│       │               └── TestUsers.java
+│       └── pom.xml
+├── AI-CRITICAL-ANALYSIS.md                # Comparison report
+├── README.md                              # This file
+└── pom.xml                                # Main project POM
 ```
 
-**GraphQL Mutation Example:**
-```graphql
-mutation {
-  createUser(input: {
-    username: "newuser"
-    password: "password123"
-    role: STUDENT
-  }) {
-    id
-    username
-    role
-  }
-}
-```
+## Running Tests
 
----
-
-## 🧪 Testing
-
-### Run all tests
 ```bash
 mvn test
 ```
 
-### Run specific test
-```bash
-mvn test -Dtest=PlanetServiceTest
-```
+All 32 tests pass successfully:
+- 15 controller integration tests
+- 6 repository tests
+- 9 service integration tests
+- 1 data initializer test
+- 1 application context test
 
-### Test Report
-After running tests, report is generated at:
-- `target/test-report.md`
-- `test-report.md` (project root)
+## Design Decisions
 
----
+1. **Code-based Data Initialization**: Used `DataInitializer` (ApplicationRunner) instead of `data.sql` to avoid primary key conflicts in tests
+2. **Transactional Tests**: All integration tests use `@Transactional` to ensure data isolation
+3. **Custom Repository Methods**: Used Spring Data JPA query derivation for most queries; `@Query` for specific field projections
+4. **DTO Mapping**: Manual mapping methods in services (toDto/fromDto) for full control
+5. **GraphQL Limited Scope**: Only User entity exposed via GraphQL as per specification
+6. **Response Status Annotations**: Controllers use `@ResponseStatus` instead of `ResponseEntity<>` as per best practice
 
-## 🗄️ Database
+## Known Limitations
 
-### H2 Console
-- URL: http://localhost:8080/h2-console
-- JDBC URL: `jdbc:h2:mem:spacedb`
-- Username: `sa`
-- Password: (empty)
+None - all required functionality is implemented and tested.
 
----
+## Authors
 
-## 📊 Actuator Endpoints
+Development Team (Manual Implementation)
 
-- Health: http://localhost:8080/actuator/health
-- Mappings: http://localhost:8080/actuator/mappings
-- Metrics: http://localhost:8080/actuator/metrics
-- Info: http://localhost:8080/actuator/info
+## License
 
----
-
-## 🛠️ Technologies
-
-- **Spring Boot:** 3.5.8
-- **Java:** 17
-- **Build Tool:** Maven
-- **Database:** H2 (in-memory)
-- **Security:** Spring Security (Basic Auth, BCrypt)
-- **API:** REST + GraphQL
-- **Validation:** Jakarta Bean Validation
-- **AOP:** AspectJ
-- **Documentation:** Swagger/OpenAPI (springdoc)
-- **Monitoring:** Spring Boot Actuator
-- **Boilerplate Reduction:** Lombok
-
----
-
-## ⚠️ Known Limitations
-
-All functional requirements are implemented. No limitations.
-
----
-
-## 📝 REST Request Examples
-
-### Create planet (ADMIN/STAFF)
-```bash
-curl -X POST http://localhost:8080/api/planets \
-  -u admin:admin123 \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Earth",
-    "type": "terrestrial",
-    "radiusKm": 6371,
-    "massKg": 5.972e24,
-    "orbitalPeriodDays": 365
-  }'
-```
-
-### Get all planets (any role)
-```bash
-curl -X GET http://localhost:8080/api/planets \
-  -u student:student123
-```
-
-### Delete planet (ADMIN/STAFF only)
-```bash
-curl -X DELETE http://localhost:8080/api/planets/1 \
-  -u admin:admin123
-```
-
----
-
-## 👥 Authors
-
-[Your Name] - Manual Implementation
-
----
-
-## 📄 License
-
-This project was created for educational purposes (MTU App Development Frameworks, 2025).
+Educational project - MTU App Development Frameworks course
