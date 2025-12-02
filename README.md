@@ -98,7 +98,46 @@ This is a Spring Boot 3.5.8 REST and GraphQL API for managing planets, moons, an
 - Java 17 or higher
 - Maven 3.6+
 
-### Build and Run
+### Option 1: From Submission ZIP (Recommended)
+
+After extracting the submission ZIP file:
+
+**1. Human Implementation (Main Project)**
+```bash
+# Navigate to extracted directory
+cd space-app
+
+# Build and run
+mvn clean install
+mvn spring-boot:run
+```
+The application will start on `http://localhost:8080`
+
+**2. GPT-Generated Project**
+```bash
+# Navigate to GPT project
+cd gpt5.1_space-app
+
+# Build and run
+mvn clean install
+mvn spring-boot:run
+```
+The application will start on `http://localhost:8080`
+
+**3. Gemini-Generated Project**
+```bash
+# Navigate to Gemini project
+cd Gemini3.1/universe-api
+
+# Build and run
+mvn clean install
+mvn spring-boot:run
+```
+The application will start on `http://localhost:8080`
+
+**Note**: Only run one application at a time as they all use port 8080.
+
+### Option 2: From Git Repository
 
 ```bash
 # Clone the repository
