@@ -35,3 +35,29 @@ Thumbs.db
 
 test-report.md
 Spring Boot Project 2025.pdf
+
+# AI-generated projects - ignore build artifacts and IDE files
+Gemini3.1/**/target/
+Gemini3.1/**/*.class
+Gemini3.1/**/*.log
+Gemini3.1/**/.idea/
+Gemini3.1/**/*.iml
+Gemini3.1/**/.settings/
+Gemini3.1/**/.classpath
+Gemini3.1/**/.project
+Gemini3.1/**/.vscode/
+Gemini3.1/**/*.h2.db
+Gemini3.1/**/*.mv.db
+
+gpt5.1_space-app/**/target/
+gpt5.1_space-app/**/*.class
+gpt5.1_space-app/**/*.log
+gpt5.1_space-app/**/.idea/
+gpt5.1_space-app/**/*.iml
+gpt5.1_space-app/**/.settings/
+gpt5.1_space-app/**/.classpath
+gpt5.1_space-app/**/.project
+gpt5.1_space-app/**/.vscode/
+gpt5.1_space-app/**/*.h2.db
+gpt5.1_space-app/**/*.mv.db
+

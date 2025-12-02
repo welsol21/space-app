@@ -1,0 +1,25 @@
+type Query {
+    userById(id: ID): UserDto
+}
+
+type Mutation {
+    createUser(input: CreateUserInput!): UserDto
+}
+
+type UserDto {
+    id: ID
+    username: String
+    role: Role
+}
+
+input CreateUserInput {
+    username: String!
+    password: String!
+    role: Role!
+}
+
+enum Role {
+    ADMIN
+    STAFF
+    STUDENT
+}
