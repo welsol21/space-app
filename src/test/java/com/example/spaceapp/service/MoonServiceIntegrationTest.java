@@ -25,7 +25,7 @@ class MoonServiceIntegrationTest {
     @Test
     void createMoon_shouldMapPlanetFields() {
         PlanetDto planet = planetService.createPlanet(PlanetCreateUpdateDto.builder()
-                .name("Earth")
+                .name("TestEarth")
                 .type("Terrestrial")
                 .radiusKm(6371.0)
                 .massKg(5.972e24)
@@ -33,7 +33,7 @@ class MoonServiceIntegrationTest {
                 .build());
 
         MoonDto created = moonService.createMoon(MoonCreateUpdateDto.builder()
-                .name("Moon")
+                .name("TestMoon")
                 .diameterKm(3474.8)
                 .orbitalPeriodDays(27.3)
                 .planetId(planet.getId())
@@ -41,7 +41,7 @@ class MoonServiceIntegrationTest {
 
         assertThat(created.getId()).isNotNull();
         assertThat(created.getPlanetId()).isEqualTo(planet.getId());
-        assertThat(created.getPlanetName()).isEqualTo("Earth");
+        assertThat(created.getPlanetName()).isEqualTo("TestEarth");
     }
 
     @Test
@@ -58,7 +58,7 @@ class MoonServiceIntegrationTest {
     @Test
     void countByPlanetId_shouldMatchRepositoryCount() {
         PlanetDto mars = planetService.createPlanet(PlanetCreateUpdateDto.builder()
-                .name("Mars")
+                .name("TestMars")
                 .type("Terrestrial")
                 .radiusKm(3389.5)
                 .massKg(6.39e23)
@@ -66,13 +66,13 @@ class MoonServiceIntegrationTest {
                 .build());
 
         moonService.createMoon(MoonCreateUpdateDto.builder()
-                .name("Phobos")
+                .name("TestPhobos")
                 .diameterKm(22.2)
                 .orbitalPeriodDays(0.3189)
                 .planetId(mars.getId())
                 .build());
         moonService.createMoon(MoonCreateUpdateDto.builder()
-                .name("Deimos")
+                .name("TestDeimos")
                 .diameterKm(12.4)
                 .orbitalPeriodDays(1.263)
                 .planetId(mars.getId())

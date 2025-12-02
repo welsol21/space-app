@@ -42,7 +42,7 @@ class PlanetControllerIntegrationTest {
     @BeforeEach
     void setup() {
         Planet p = planetRepository.save(Planet.builder()
-                .name("Mercury")
+                .name("TestMercury")
                 .type("Terrestrial")
                 .radiusKm(2439.7)
                 .massKg(3.301e23)
@@ -67,7 +67,7 @@ class PlanetControllerIntegrationTest {
         mockMvc.perform(get("/api/planets/" + existingPlanetId)
                         .header(HttpHeaders.AUTHORIZATION, basic(TestUsers.STUDENT_USER, TestUsers.STUDENT_PASS)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Mercury"));
+                .andExpect(jsonPath("$.name").value("TestMercury"));
 
         PlanetCreateUpdateDto dto = PlanetCreateUpdateDto.builder()
                 .name("Pluto")
@@ -129,7 +129,7 @@ class PlanetControllerIntegrationTest {
     @Test
     void createPlanet_duplicateName_shouldReturn400_ErrorResponse() throws Exception {
         PlanetCreateUpdateDto dto = PlanetCreateUpdateDto.builder()
-                .name("Mercury") // already exists
+                .name("TestMercury") // already exists
                 .type("Terrestrial")
                 .radiusKm(2439.7)
                 .massKg(3.301e23)
@@ -180,7 +180,7 @@ class PlanetControllerIntegrationTest {
     @Test
     void searchAndNamesEndpoints_shouldWork() throws Exception {
         planetRepository.save(Planet.builder()
-                .name("Jupiter")
+                .name("TestJupiter")
                 .type("Gas Giant")
                 .radiusKm(69911.0)
                 .massKg(1.898e27)
@@ -192,12 +192,12 @@ class PlanetControllerIntegrationTest {
                         .queryParam("type", "gas giant")
                         .header(HttpHeaders.AUTHORIZATION, basic(TestUsers.ADMIN_USER, TestUsers.ADMIN_PASS)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@.name == 'Jupiter')]").exists());
+                .andExpect(jsonPath("$[?(@.name == 'TestJupiter')]").exists());
 
         mockMvc.perform(get("/api/planets/names")
                         .header(HttpHeaders.AUTHORIZATION, basic(TestUsers.ADMIN_USER, TestUsers.ADMIN_PASS)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@ == 'Mercury')]").exists());
+                .andExpect(jsonPath("$[?(@ == 'TestMercury')]").exists());
     }
 
     @Test
@@ -205,6 +205,6 @@ class PlanetControllerIntegrationTest {
         mockMvc.perform(get("/api/planets/fields/name-mass")
                         .header(HttpHeaders.AUTHORIZATION, basic(TestUsers.ADMIN_USER, TestUsers.ADMIN_PASS)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[?(@.name == 'Mercury' && @.massKg == 3.301E23)]").exists());
+                .andExpect(jsonPath("$[?(@.name == 'TestMercury' && @.massKg == 3.301E23)]").exists());
     }
 }

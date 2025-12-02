@@ -48,7 +48,7 @@ class MoonControllerIntegrationTest {
     @BeforeEach
     void setup() {
         Planet earth = planetRepository.save(Planet.builder()
-                .name("Earth")
+                .name("TestEarth")
                 .type("Terrestrial")
                 .radiusKm(6371.0)
                 .massKg(5.972e24)
@@ -58,7 +58,7 @@ class MoonControllerIntegrationTest {
         planetId = earth.getId();
 
         Moon moon = moonRepository.save(Moon.builder()
-                .name("Moon")
+                .name("TestMoon")
                 .diameterKm(3474.8)
                 .orbitalPeriodDays(27.3)
                 .planet(earth)
@@ -103,7 +103,7 @@ class MoonControllerIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").isNumber())
                 .andExpect(jsonPath("$.planetId").value(planetId))
-                .andExpect(jsonPath("$.planetName").value("Earth"))
+                .andExpect(jsonPath("$.planetName").value("TestEarth"))
                 .andReturn().getResponse().getContentAsString();
 
         long createdId = Long.parseLong(response.replaceAll(".*\"id\"\s*:\s*(\\d+).*", "$1"));
@@ -129,11 +129,11 @@ class MoonControllerIntegrationTest {
 
     @Test
     void listAndCountEndpoints_shouldWork() throws Exception {
-        mockMvc.perform(get("/api/moons/by-planet-name/earth")
+        mockMvc.perform(get("/api/moons/by-planet-name/testearth")
                         .header(HttpHeaders.AUTHORIZATION, basic(TestUsers.ADMIN_USER, TestUsers.ADMIN_PASS)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].name").value("Moon"))
-                .andExpect(jsonPath("$[0].planetName").value("Earth"));
+                .andExpect(jsonPath("$[0].name").value("TestMoon"))
+                .andExpect(jsonPath("$[0].planetName").value("TestEarth"));
 
         mockMvc.perform(get("/api/moons/count/by-planet/" + planetId)
                         .header(HttpHeaders.AUTHORIZATION, basic(TestUsers.ADMIN_USER, TestUsers.ADMIN_PASS)))
